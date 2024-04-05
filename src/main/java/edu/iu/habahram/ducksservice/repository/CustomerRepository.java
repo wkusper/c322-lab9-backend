@@ -1,5 +1,6 @@
 package edu.iu.habahram.ducksservice.repository;
 import edu.iu.habahram.ducksservice.model.Customer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import java.io.File;
@@ -45,13 +46,11 @@ public class CustomerRepository {
                     "Please choose another one.");
         }
         Path path = Paths.get(DATABASE_NAME);
+        BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+        String passwordEncoded = bc.encode(customer.password());
         String data = customer.username() + ","
-                + customer.password()// (THIS IS ONLY TEMPORARY!)
-                                      // we should never store the plain password.
-                                      // In the next step in this lab,
-                                      // we will encode the password
-                                      //before saving it to the file
-               + "," + customer.email();
+                + passwordEncoded
+                + "," + customer.email();
         appendToFile(path, data + NEW_LINE);
     }
 
